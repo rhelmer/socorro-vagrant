@@ -3,7 +3,7 @@
 2) Run vagrant (http://vagrantup.com/) :
 
 $ gem install vagrant
-$ vagrant box add base http://files.vagrantup.com/lucid64.box
+$ vagrant box add socorro-all http://files.vagrantup.com/lucid64.box
 $ vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:
