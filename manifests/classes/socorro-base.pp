@@ -23,11 +23,17 @@ class socorro-base {
             require => Exec['socorro-install'],
 	    target=> "/data/socorro/application/scripts/crons/socorrorc";
 
-	 'etc-socorro':
-            path => "/etc/socorro/",
+	 'python-configs':
+            path => "/data/socorro/application/scripts/config",
             recurse => true,
-            ignore => [".svn"],
-            source => "/vagrant/files/etc-socorro";
+            require => Exec['socorro-install'],
+            source => "/vagrant/files/python-configs";
+
+	 'php-configs':
+            path => "/data/socorro/htdocs/application/config",
+            recurse => true,
+            require => Exec['socorro-install'],
+            source => "/vagrant/files/php-configs";
 
 # FIXME break this out to separate classes
 	 'etc_supervisor':
@@ -264,7 +270,7 @@ class socorro-web inherits socorro-base {
         apache2:
             enable => true,
             ensure => running,
-            subscribe => File["etc-socorro"],
+            subscribe => File["python-configs"],
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl]];
     }
