@@ -23,6 +23,9 @@ browse UI:      http://crash-stats
 submit crashes: https://crash-reports
 query data:     http://socorro-api
 
+SSH into your VM:
+$ vagrant ssh
+
 ---
 KNOWN ISSUES
 ---
