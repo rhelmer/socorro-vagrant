@@ -195,7 +195,8 @@ class socorro-python inherits socorro-base {
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/trunk',
             timeout => '3600',
-            require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], Package['ant']],
+            require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], 
+                        Package['ant'], File['/data/socorro']],
             user => 'socorro';
     }
 
