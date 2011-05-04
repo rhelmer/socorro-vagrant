@@ -4,7 +4,6 @@
 
 $ gem install vagrant
 $ vagrant box add base http://files.vagrantup.com/lucid64.box
-$ vagrant init
 $ vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:
