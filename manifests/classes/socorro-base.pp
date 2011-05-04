@@ -33,7 +33,7 @@ class socorro-base {
 	 'etc_supervisor':
             path => "/etc/supervisor/conf.d/",
             recurse => true,
-            require => Package['supervisor'],
+            require => [Package['supervisor'], Exec['socorro-install']],
             source => "/vagrant/files/etc_supervisor";
 
 # FIXME
