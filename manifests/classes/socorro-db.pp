@@ -59,14 +59,14 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/psql -c "CREATE TABLE sessions ( session_id varchar(127) NOT NULL, last_activity integer NOT NULL, data text NOT NULL, CONSTRAINT session_id_pkey PRIMARY KEY (session_id), CONSTRAINT last_activity_check CHECK (last_activity >= 0))"':
+        '/usr/bin/psql -c "CREATE TABLE sessions ( session_id varchar(127) NOT NULL, last_activity integer NOT NULL, data text NOT NULL, CONSTRAINT session_id_pkey PRIMARY KEY (session_id), CONSTRAINT last_activity_check CHECK (last_activity >= 0))" breakpad':
             alias => 'create-sessions-table',
             user => 'postgres',
             require => Exec['create-language-plperl'];
     }
 
     exec {
-        '/usr/bin/psql -c "ALTER TABLE sessions OWNER TO breakpad_rw"':
+        '/usr/bin/psql -c "ALTER TABLE sessions OWNER TO breakpad_rw" breakpad':
             alias => 'alter-sessions-table',
             user => 'postgres',
             require => [Exec['create-sessions-table'], Exec['create-breakpad-role']];
