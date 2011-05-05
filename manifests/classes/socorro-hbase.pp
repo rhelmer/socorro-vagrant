@@ -11,6 +11,10 @@ class socorro-hbase {
             ensure => 'present',
             require => Exec['apt-get-update-cloudera'];
 
+        'hadoop-hbase-master':
+            ensure => 'present',
+            require => Package['hadoop-hbase'];
+
         'hadoop-hbase-thrift':
             ensure => 'present',
             require => Package['hadoop-hbase'];
@@ -37,7 +41,14 @@ class socorro-hbase {
         hadoop-hbase-thrift:
             enable => true,
             ensure => running,
-            require => Package['hadoop-hbase-thrift'];
+            hasstatus => true,
+            require => Service['hadoop-hbase-master'];
+
+        hadoop-hbase-master:
+            enable => true,
+            ensure => running,
+            hasstatus => true,
+            require => Package['hadoop-hbase-master'];
     }
 
 }
