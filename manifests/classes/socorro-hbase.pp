@@ -22,6 +22,9 @@ class socorro-hbase {
         'curl':
             require => Exec['apt-get-update'],
             ensure => 'present';
+
+        'liblzo2-dev':
+            ensure => 'present';
     }
 
     exec { 
@@ -42,7 +45,7 @@ class socorro-hbase {
             enable => true,
             ensure => running,
             hasstatus => true,
-            require => Service['hadoop-hbase-master'];
+            require => [Package['hadoop-hbase-thrift'], Service['hadoop-hbase-master']];
 
         hadoop-hbase-master:
             enable => true,
