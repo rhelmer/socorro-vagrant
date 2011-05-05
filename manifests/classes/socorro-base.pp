@@ -78,19 +78,17 @@ class socorro-base {
     }
 
     exec {
-        'update-partner-repo':
-            require => Exec['add-partner-repo'],
-            refreshonly => true,
-            command => '/usr/bin/apt-get update';
-    }
-
-    exec {
         '/usr/bin/sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"':
             alias => 'add-partner-repo',
-            unless => '/bin/grep "deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list',
-            refreshonly => true,
+            unless => '/bin/grep "^deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list',
             require => Package['python-software-properties'];
     }   
+
+    exec {
+        'update-partner-repo':
+            require => Exec['add-partner-repo'],
+            command => '/usr/bin/apt-get update';
+    }
 
     exec {
         '/bin/echo sun-java6-jdk shared/accepted-sun-dlj-v1-1 boolean true | debconf-set-selections':
