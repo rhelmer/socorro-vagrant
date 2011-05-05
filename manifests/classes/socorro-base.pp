@@ -25,12 +25,16 @@ class socorro-base {
 
 	 'python-configs':
             path => "/data/socorro/application/scripts/config",
+            owner => socorro,
+            group => root,
             recurse => true,
             require => Exec['socorro-install'],
             source => "/vagrant/files/python-configs";
 
 	 'php-configs':
             path => "/data/socorro/htdocs/application/config",
+            owner => socorro,
+            group => root,
             recurse => true,
             require => Exec['socorro-install'],
             source => "/vagrant/files/php-configs";
@@ -76,18 +80,21 @@ class socorro-base {
     exec {
         'update-partner-repo':
             require => Exec['add-partner-repo'],
+            refreshonly => true,
             command => '/usr/bin/apt-get update';
     }
 
     exec {
         '/usr/bin/sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"':
             alias => 'add-partner-repo',
+            unless => '/bin/grep "deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list',
             require => Package['python-software-properties'];
     }   
 
     exec {
         '/bin/echo sun-java6-jdk shared/accepted-sun-dlj-v1-1 boolean true | debconf-set-selections':
             alias => 'accept-java',
+            refreshonly => true,
             require => Exec['update-partner-repo'];
     }
 
@@ -334,24 +341,28 @@ class socorro-php inherits socorro-web {
     exec {
         '/usr/sbin/a2ensite crash-stats':
             alias => 'enable-crash-stats-vhost',
+            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
     exec {
         '/usr/sbin/a2enmod rewrite':
             alias => 'enable-mod-rewrite',
+            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
     exec {
         '/usr/sbin/a2enmod ssl':
             alias => 'enable-mod-ssl',
+            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
     exec {
         '/usr/sbin/a2enmod headers':
             alias => 'enable-mod-headers',
+            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
