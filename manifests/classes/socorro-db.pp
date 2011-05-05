@@ -69,7 +69,7 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -c "ALTER TABLE sessions OWNER TO breakpad_rw"':
             alias => 'alter-sessions-table',
             user => 'postgres',
-            require => Exec['create-sessions-table'];
+            require => [Exec['create-sessions-table'], Exec['create-breakpad-role']];
     }
 
     exec {
@@ -83,7 +83,7 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, \'2010-11-05\', \'2015-02-05\', true)"':
             alias => 'insert-product_visibility',
             user => 'postgres',
-            require => Exec['setup-schema'];
+            require => Exec['insert-productdims'];
     }
 
 
