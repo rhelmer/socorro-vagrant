@@ -55,7 +55,7 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -c "create language plperl" breakpad':
             user => 'postgres',
             alias => 'create-language-plperl',
-            require => Exec['create-language-plpgsql'];
+            require => [Exec['create-language-plpgsql'], Package['postgresql-plperl']];
     }
 
     exec {
