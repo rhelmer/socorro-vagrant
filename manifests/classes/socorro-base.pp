@@ -93,7 +93,6 @@ class socorro-base {
     exec {
         '/bin/echo sun-java6-jdk shared/accepted-sun-dlj-v1-1 boolean true | debconf-set-selections':
             alias => 'accept-java',
-            refreshonly => true,
             require => Exec['update-partner-repo'];
     }
 
