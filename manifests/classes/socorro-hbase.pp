@@ -9,7 +9,7 @@ class socorro-hbase {
     package {
         'hadoop-hbase':
             ensure => 'present',
-            require => Exec['apt-get-update-cloudera'];
+            require => [Exec['apt-get-update-cloudera'], Package['sun-java6-jdk']];
 
         'hadoop-hbase-master':
             ensure => 'present',
