@@ -66,14 +66,14 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, '2010-11-05', '2011-02-05', true)"':
+        '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, \'2010-11-05\', \'2011-02-05\', true)"':
             alias => 'insert-product_visibility',
             user => 'postgres',
             require => Exec['insert-productdims'];
     }
 
     exec {
-        '/usr/bin/psql -c "CREATE TABLE sessions ( session_id varchar(127) NOT NULL, last_activity integer NOT NULL, data text NOT NULL, CONSTRAINT session_id_pkey PRIMARY KEY (session_id), CONSTRAINT last_activity_check CHECK (last_activity >= 0))"',
+        '/usr/bin/psql -c "CREATE TABLE sessions ( session_id varchar(127) NOT NULL, last_activity integer NOT NULL, data text NOT NULL, CONSTRAINT session_id_pkey PRIMARY KEY (session_id), CONSTRAINT last_activity_check CHECK (last_activity >= 0))"':
             alias => 'create-sessions-table',
             user => 'postgres',
             require => Exec['insert-product_visibility'];
