@@ -18,6 +18,13 @@ class socorro-base {
 	    recurse=> false,
 	    ensure => directory;
 
+        '/etc/socorro':
+            owner => socorro,
+            group => socorro,
+            mode  => 755,
+	    recurse=> false,
+	    ensure => directory;
+
 	 '/etc/socorro/socorrorc':
 	    ensure => link,
             require => Exec['socorro-install'],
@@ -219,8 +226,8 @@ class socorro-python inherits socorro-base {
                             "databaseUserName=breakpad_rw",
                             "databasePassword=aPassword"],
             timeout => '3600',
-            require => [Exec['socorro-install'],
-                        Exec['create-breakpad-role']],
+            require => [File['python-configs'],
+                        Exec['create-language-plperl']],
             user => 'socorro';
     }
 }
@@ -339,28 +346,24 @@ class socorro-php inherits socorro-web {
     exec {
         '/usr/sbin/a2ensite crash-stats':
             alias => 'enable-crash-stats-vhost',
-            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
     exec {
         '/usr/sbin/a2enmod rewrite':
             alias => 'enable-mod-rewrite',
-            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
     exec {
         '/usr/sbin/a2enmod ssl':
             alias => 'enable-mod-ssl',
-            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 
     exec {
         '/usr/sbin/a2enmod headers':
             alias => 'enable-mod-headers',
-            refreshonly => true,
             require => File['crash-stats-vhost'],
     }
 

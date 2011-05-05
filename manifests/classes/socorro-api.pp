@@ -25,7 +25,6 @@ class socorro-api inherits socorro-web {
     exec {
         '/usr/sbin/a2ensite socorro-api':
             alias => 'enable-socorro-api-vhost',
-            refreshonly => true,
             require => File['socorro-api-vhost'],
     }
 

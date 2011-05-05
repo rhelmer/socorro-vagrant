@@ -39,7 +39,6 @@ class socorro-collector inherits socorro-web {
     exec {
         '/usr/sbin/a2ensite crash-reports':
             alias => 'enable-crash-reports-vhost',
-            refreshonly => true,
             require => File['crash-reports-vhost'],
     }
 
