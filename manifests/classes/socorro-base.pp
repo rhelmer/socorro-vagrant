@@ -88,6 +88,7 @@ class socorro-base {
         '/usr/bin/sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"':
             alias => 'add-partner-repo',
             unless => '/bin/grep "deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list',
+            refreshonly => true,
             require => Package['python-software-properties'];
     }   
 
