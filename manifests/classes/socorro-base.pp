@@ -227,7 +227,7 @@ class socorro-python inherits socorro-base {
                             "databasePassword=aPassword"],
             timeout => '3600',
             require => [File['python-configs'],
-                        Exec['create-sessions-table']],
+                        Exec['alter-sessions-table']],
             user => 'socorro';
     }
 }
@@ -384,6 +384,10 @@ class socorro-php inherits socorro-web {
 	    ensure => 'present';
 
         'php5-pgsql':
+            require => Exec['apt-get-update'],
+            ensure => 'present';
+
+        'php5-curl':
             require => Exec['apt-get-update'],
             ensure => 'present';
 

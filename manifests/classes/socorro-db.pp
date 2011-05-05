@@ -59,25 +59,33 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/psql -c "INSERT INTO productdims (product, version, branch) values (\'GenericProduct\', \'1.0\', \'1.0\')" breakpad':
-            alias => 'insert-productdims',
+        '/usr/bin/psql -c "CREATE TABLE sessions ( session_id varchar(127) NOT NULL, last_activity integer NOT NULL, data text NOT NULL, CONSTRAINT session_id_pkey PRIMARY KEY (session_id), CONSTRAINT last_activity_check CHECK (last_activity >= 0))"':
+            alias => 'create-sessions-table',
             user => 'postgres',
             require => Exec['create-language-plperl'];
     }
 
     exec {
-        '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, \'2010-11-05\', \'2011-02-05\', true)"':
-            alias => 'insert-product_visibility',
+        '/usr/bin/psql -c "ALTER TABLE sessions OWNER TO breakpad_rw"':
+            alias => 'alter-sessions-table',
             user => 'postgres',
-            require => Exec['insert-productdims'];
+            require => Exec['create-sessions-table'];
     }
 
     exec {
-        '/usr/bin/psql -c "CREATE TABLE sessions ( session_id varchar(127) NOT NULL, last_activity integer NOT NULL, data text NOT NULL, CONSTRAINT session_id_pkey PRIMARY KEY (session_id), CONSTRAINT last_activity_check CHECK (last_activity >= 0))"':
-            alias => 'create-sessions-table',
+        '/usr/bin/psql -c "INSERT INTO productdims (product, version, branch) values (\'GenericProduct\', \'1.0\', \'1.0\')" breakpad':
+            alias => 'insert-productdims',
             user => 'postgres',
-            require => Exec['insert-product_visibility'];
+            require => Exec['setup-schema'];
     }
+
+    exec {
+        '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, \'2010-11-05\', \'2015-02-05\', true)"':
+            alias => 'insert-product_visibility',
+            user => 'postgres',
+            require => Exec['setup-schema'];
+    }
+
 
     exec {
         '/usr/bin/createdb test':
