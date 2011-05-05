@@ -227,7 +227,7 @@ class socorro-python inherits socorro-base {
                             "databasePassword=aPassword"],
             timeout => '3600',
             require => [File['python-configs'],
-                        Exec['create-language-plperl']],
+                        Exec['create-sessions-table']],
             user => 'socorro';
     }
 }

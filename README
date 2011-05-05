@@ -30,7 +30,6 @@ $ vagrant ssh
 KNOWN ISSUES
 ---
 
-* need to install HBase schema
+* HBase
+** need to install schema
 ** need to workaround or install LZO
-* Socorro UI needs additional config
-** https://wiki.mozilla.org/Socorro/SocorroUI/Installation
