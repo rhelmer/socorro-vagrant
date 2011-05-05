@@ -80,7 +80,7 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, \'2010-11-05\', \'2015-02-05\', true)"':
+        '/usr/bin/psql -c "INSERT INTO product_visibility (productdims_id, start_date, end_date, featured) VALUES (1, \'2010-11-05\', \'2015-02-05\', true)" breakpad':
             alias => 'insert-product_visibility',
             user => 'postgres',
             require => Exec['insert-productdims'];
