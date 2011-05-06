@@ -137,8 +137,9 @@ class socorro-db inherits socorro-base {
     }
 
     service {
-        postgresql:
+        'postgresql-8.4':
             enable => true,
+            alias => postgresql,
             require => Package['postgresql'],
             ensure => running;
     }
