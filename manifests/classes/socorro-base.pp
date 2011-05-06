@@ -59,6 +59,7 @@ class socorro-base {
             path => "/etc/supervisor/conf.d/",
             recurse => true,
             require => [Package['supervisor'], Exec['socorro-install']],
+	    notify => Service[supervisor],
             source => "/vagrant/files/etc_supervisor";
 
 # FIXME
@@ -134,7 +135,8 @@ class socorro-base {
     service {
         supervisor:
             enable => true,
-            require => Package['supervisor'],
+            hasstatus => true,
+            require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift']],
             ensure => running;
     }
 
@@ -300,7 +302,7 @@ class socorro-web inherits socorro-base {
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl],
                         File[python-configs], File[php-configs],
-                        Package[php5]];
+                        Package[php5], Exec[enable-mod-proxy]];
     }
 
 }
@@ -367,6 +369,12 @@ class socorro-php inherits socorro-web {
     exec {
         '/usr/sbin/a2enmod rewrite':
             alias => 'enable-mod-rewrite',
+            require => File['crash-stats-vhost'],
+    }
+
+    exec {
+        '/usr/sbin/a2enmod proxy && /usr/sbin/a2enmod proxy_http':
+            alias => 'enable-mod-proxy',
             require => File['crash-stats-vhost'],
     }
 
