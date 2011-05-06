@@ -136,4 +136,11 @@ class socorro-db inherits socorro-base {
             require => [Exec['create-test-db'], Package['postgresql-plperl']];
     }
 
+    service {
+        postgresql:
+            enable => true,
+            require => Package['postgresql'],
+            ensure => running;
+    }
+
 }
