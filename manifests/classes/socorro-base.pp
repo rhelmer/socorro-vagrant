@@ -282,6 +282,7 @@ class socorro-web inherits socorro-base {
         apache2:
             enable => true,
             ensure => running,
+            hasstatus => true,
             subscribe => File[python-configs],
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl],
