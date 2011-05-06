@@ -43,6 +43,7 @@ class socorro-base {
             group => root,
             recurse => true,
             require => Exec['socorro-install'],
+	    notify => Service[supervisor],
             source => "/vagrant/files/python-configs";
 
 	 'php-configs':
@@ -68,9 +69,7 @@ class socorro-base {
 #	    source => "/vagrant/files/data-bin";
 
         '/var/log/socorro':
-            owner => socorro,
-            group => socorro,
-            mode  => 755,
+            mode  => 644,
 	    recurse=> true,
 	    ensure => directory;
 
@@ -130,6 +129,13 @@ class socorro-base {
         'python-software-properties':
             require => Exec['apt-get-update'],
             ensure => 'present';
+    }
+
+    service {
+        supervisor:
+            enable => true,
+            require => Package['supervisor'],
+            ensure => running;
     }
 
 }
