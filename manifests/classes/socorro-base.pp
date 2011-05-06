@@ -286,7 +286,8 @@ class socorro-web inherits socorro-base {
             subscribe => File[python-configs],
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl],
-                        File[python-configs], File[php-configs]];
+                        File[python-configs], File[php-configs],
+                        Package[php5]];
     }
 
 }
