@@ -149,8 +149,9 @@ class socorro-base {
         supervisor:
             enable => true,
             hasstatus => true,
+            stop => 'force-stop',
             require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift'],
-                        Exec['setup-schema']],
+                        Exec['setup-schema'], Exec['hbase-schema']],
             ensure => running;
 
         rsyslog:
