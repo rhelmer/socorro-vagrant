@@ -46,6 +46,15 @@ class socorro-base {
 	    notify => Service[supervisor],
             source => "/vagrant/files/python-configs";
 
+	'/etc/rsyslog.conf':
+            require => Package[rsyslog],
+	    owner => root,
+	    group => root,
+	    mode => 644,
+	    ensure => present,
+	    notify => Service[rsyslog],
+	    source => "/vagrant/files/rsyslog.conf";
+
 	 'php-configs':
             path => "/data/socorro/htdocs/application/config",
             owner => socorro,
@@ -58,7 +67,7 @@ class socorro-base {
 	 'etc_supervisor':
             path => "/etc/supervisor/conf.d/",
             recurse => true,
-            require => [Package['supervisor'], Exec['socorro-install']],
+            require => Package['supervisor'],
 	    notify => Service[supervisor],
             source => "/vagrant/files/etc_supervisor";
 
@@ -115,6 +124,10 @@ class socorro-base {
             ensure => present,
             require => Exec['apt-get-update'];
 
+        'rsyslog':
+            ensure => present,
+            require => Exec['apt-get-update'];
+
         'libcurl4-openssl-dev':
             require => Exec['apt-get-update'],
             ensure => present;
@@ -136,7 +149,13 @@ class socorro-base {
         supervisor:
             enable => true,
             hasstatus => true,
-            require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift']],
+            require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift'],
+                        Exec['setup-schema']],
+            ensure => running;
+
+        rsyslog:
+            enable => true,
+            require => Package['rsyslog'],
             ensure => running;
     }
 
