@@ -20,7 +20,7 @@ $ vagrant up
 4) Enjoy your Socorro environment!
 
 browse UI:      http://crash-stats
-submit crashes: https://crash-reports
+submit crashes: http://crash-reports
 query data:     http://socorro-api
 
 SSH into your VM:
