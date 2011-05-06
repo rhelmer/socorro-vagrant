@@ -6,32 +6,25 @@
   ReWriteEngine On
 
   RewriteCond %{REQUEST_URI} /dumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).jsonz
-  RewriteCond /mnt/old_bp_jsonz/datetree/20$4/name/$1/$2/$1$2$3$4.jsonz -f
-  ReWriteRule /dumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).jsonz /mnt/old_bp_jsonz/datetree/20$4/name/$1/$2/$1$2$3$4.jsonz [L]
-
-  RewriteCond %{REQUEST_URI} /dumps/(\w\w)(\w\w)((?:\w|-)+).jsonz
-  RewriteCond /mnt/old_bp_jsonz/name/$1/$2/$1$2$3.jsonz -f
-  ReWriteRule /dumps/(\w\w)(\w\w)((?:\w|-)+).jsonz /mnt/old_bp_jsonz/name/$1/$2/$1$2$3.jsonz [L]
-
-  RewriteCond %{REQUEST_URI} /dumps/(\w\w)(\w\w)((?:\w|-)+).jsonz
-  RewriteCond /mnt/processed_bp_jsons/name/$1/$2/$1$2$3.jsonz -f [OR]
-  RewriteCond /mnt/processed_bp_jsons/name/$1/$2/$1$2$3.jsonz -l
-  ReWriteRule /dumps/(\w\w)(\w\w)((?:\w|-)+).jsonz /mnt/processed_bp_jsons/name/$1/$2/$1$2$3.jsonz [L]
-
-  RewriteCond %{REQUEST_URI} /dumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).jsonz
   ReWriteRule /dumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).jsonz http://socorro-api/crashes/201005/crash/processed/by/uuid/$1$2$3$4 [P]
 
-  Redirect /rawdumps https://crash-stats/rawdumps
+  RewriteCond %{REQUEST_URI} /rawdumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).dump
+  ReWriteRule /rawdumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).dump http://socorro-api/crashes/201005/crash/raw_crash/by/uuid/$1$2$3$4 [P]
+
+  RewriteCond %{REQUEST_URI} /rawdumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).json
+  ReWriteRule /rawdumps/(\w\w)(\w\w)((?:\w|-)+?)(\d{6}).json http://socorro-api/crashes/201005/crash/meta/by/uuid/$1$2$3$4 [P]
+
+  ReWriteRule /rawdumps/(.*).(json|dump) /missing_dump [L]
 
   <Directory /data/socorro/htdocs>
     ReWriteEngine On
     AllowOverride All
-    php_value memory_limit "64M"
   </Directory>
 
-  <Directory /mnt/processed_bp_jsons/name>
-    AllowOverride FileInfo
-  </Directory>
+  <Proxy *>
+    Order allow,deny
+    Allow from all
+  </Proxy>
 
   SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" is-forwarded
   AddDefaultCharset UTF-8
