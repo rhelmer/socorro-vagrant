@@ -5,6 +5,13 @@
 class socorro-base {
 
     file {
+	'/etc/hosts':
+	    owner => root,
+	    group => root,
+	    mode => 644,
+	    ensure => present,
+	    source => "/vagrant/files/hosts";
+
 	'/data':
             owner => root,
             group => root,
