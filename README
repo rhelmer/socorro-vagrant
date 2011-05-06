@@ -31,5 +31,11 @@ KNOWN ISSUES
 ---
 
 * HBase
-** need to install schema
 ** need to workaround or install LZO
+
+* need moar data
+** https://bugzilla.mozilla.org/show_bug.cgi?id=653609
+** https://bugzilla.mozilla.org/show_bug.cgi?id=652248
+
+* aggregate reports (top crashers, etc) do not work without existing data
+** https://bugzilla.mozilla.org/show_bug.cgi?id=653362
