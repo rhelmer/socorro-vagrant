@@ -44,7 +44,7 @@ class socorro-hbase {
     exec {
         '/bin/cat /home/socorro/dev/trunk/analysis/hbase_schema | sed \'s/LZO/NONE/g\' | /usr/bin/hbase shell':
             alias => 'hbase-schema',
-            unless => '/bin/echo "describe crash_reports" | /usr/bin/hbase shell | grep "undefined local variable"',
+            onlyif => '/bin/echo "describe \'crash_reports\'" | /usr/bin/hbase shell | grep "undefined local variable"',
             require => Service['hadoop-hbase-master'];
     }
 
