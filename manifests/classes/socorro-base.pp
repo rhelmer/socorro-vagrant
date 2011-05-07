@@ -240,7 +240,6 @@ class socorro-python inherits socorro-base {
             timeout => '3600',
             user => 'socorro',
             require => Package['subversion'],
-            creates => '/home/socorro/dev/trunk';
     }
 
     exec {
@@ -248,7 +247,7 @@ class socorro-python inherits socorro-base {
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/trunk',
             timeout => '3600',
-            onlyif => '/usr/bin/find . -newer timestamp  | /bin/grep -v ".svn"',
+            onlyif => '/usr/bin/find . -newer /home/socorro/dev/timestamp  | /bin/grep -v ".svn"',
             require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], 
                         Package['ant'], File['/data/socorro']],
             user => 'socorro';
