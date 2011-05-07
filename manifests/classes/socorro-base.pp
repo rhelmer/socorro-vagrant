@@ -148,8 +148,8 @@ class socorro-base {
     service {
         supervisor:
             enable => true,
+            stop => '/usr/bin/service supervisor force-stop',
             hasstatus => true,
-            stop => 'force-stop',
             require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift'],
                         Exec['setup-schema'], Exec['hbase-schema']],
             ensure => running;
@@ -234,7 +234,7 @@ class socorro-python inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/svn checkout http://socorro.googlecode.com/svn/trunk/':
+        '/usr/bin/touch timestamp && /usr/bin/svn checkout http://socorro.googlecode.com/svn/trunk/':
             alias => 'socorro-checkout',
             cwd => '/home/socorro/dev',
             timeout => '3600',
@@ -248,6 +248,7 @@ class socorro-python inherits socorro-base {
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/trunk',
             timeout => '3600',
+            onlyif => '/usr/bin/find . -newer timestamp  | /bin/grep -v ".svn"',
             require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], 
                         Package['ant'], File['/data/socorro']],
             user => 'socorro';
