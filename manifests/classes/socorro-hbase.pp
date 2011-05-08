@@ -44,7 +44,7 @@ class socorro-hbase {
     exec {
         '/bin/cat /home/socorro/dev/trunk/analysis/hbase_schema | sed \'s/LZO/NONE/g\' | /usr/bin/hbase shell':
             alias => 'hbase-schema',
-            onlyif => '/bin/echo "describe \'crash_reports\'" | /usr/bin/hbase shell | grep "ERROR: Failed to find table named crash_reports"',
+            unless => '/bin/echo "describe \'crash_reports\'" | /usr/bin/hbase shell | grep "ERROR: Failed to find table named crash_reports"',
             require => Service['hadoop-hbase-master'];
     }
 
