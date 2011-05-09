@@ -148,7 +148,7 @@ class socorro-base {
     service {
         supervisor:
             enable => true,
-            stop => '/usr/bin/service supervisor force-stop',
+            stop => '/usr/bin/service supervisor force-stop && /bin/sleep 10',
             hasstatus => true,
             require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift'],
                         Exec['setup-schema'], Exec['hbase-schema']],
@@ -305,8 +305,7 @@ class socorro-web inherits socorro-base {
     package {
         'apache2':
             ensure => latest,
-            require => [Exec['apt-get-update'], Exec['socorro-install']],
-            notify => Service[apache2];
+            require => [Exec['apt-get-update'], Exec['socorro-install']];
 
         'libapache2-mod-wsgi':
             require => Package[apache2],
