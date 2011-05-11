@@ -1,6 +1,6 @@
 # vim: syntax=apache
-WSGISocketPrefix /var/run/wsgi/bpapi_s
-WSGISocketPrefix /var/run/wsgi/bpapi_nossl
+WSGISocketPrefix /var/run/bpapi_s
+WSGISocketPrefix /var/run/bpapi_nossl
 WSGIPythonPath /data/socorro/application:/data/socorro/thirdparty:/data/socorro/application/scripts
 <VirtualHost *:80>
 	ServerName socorro-api
