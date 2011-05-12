@@ -59,7 +59,7 @@ class socorro-hbase {
             enable => true,
             ensure => running,
             hasstatus => true,
-            require => Package['hadoop-hbase-master'];
+            require => [Package['hadoop-hbase-master'], File['hbase-configs']];
     }
 
 }

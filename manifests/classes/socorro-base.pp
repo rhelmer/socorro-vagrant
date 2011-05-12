@@ -63,6 +63,12 @@ class socorro-base {
             require => Exec['socorro-install'],
             source => "/vagrant/files/php-configs";
 
+	 'hbase-configs':
+            path => "/etc/hbase/conf/",
+            recurse => true,
+            require => Package['hadoop-hbase-master'],
+            source => "/vagrant/files/etc_hbase_conf";
+
 # FIXME break this out to separate classes
 	 'etc_supervisor':
             path => "/etc/supervisor/conf.d/",
