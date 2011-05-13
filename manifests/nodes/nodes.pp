@@ -1,4 +1,4 @@
-node "vagrantup" {
+node default {
     include socorro-db
     include socorro-monitor
     include socorro-admin
