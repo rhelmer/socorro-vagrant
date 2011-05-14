@@ -138,7 +138,7 @@ class socorro-base {
             require => Exec['apt-get-update'],
             ensure => present;
 
-        'build-essential':
+        'build-essentials':
             require => Exec['apt-get-update'],
             ensure => present;
 
@@ -259,7 +259,7 @@ class socorro-python inherits socorro-base {
             timeout => '3600',
             onlyif => '/usr/bin/find . -newer /home/socorro/dev/timestamp  | /bin/grep -v ".svn"',
             require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], 
-                        Package['ant'], File['/data/socorro'], Package['build-essential']],
+                        Package['ant'], File['/data/socorro'], Package['build-essentials']],
             user => 'socorro';
     }
 
