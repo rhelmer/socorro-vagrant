@@ -2,7 +2,7 @@ class socorro-db inherits socorro-base {
     package {
 	'postgresql-9.0':
             alias => 'postgresql',
-            require => [Exec['add-postgres-ppa'], Exec['apt-get-update']],
+            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']],
 	    ensure => 'present';
 
 	'postgresql-plperl-9.0':
@@ -25,13 +25,14 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-       'update-postgresql-ppa':
-            command => '/usr/bin/apt-get update';
+       'update-postgres-ppa':
+            command => '/usr/bin/apt-get update',
+            require => Exec['add-postgres-ppa'];
 
         '/usr/bin/sudo /usr/bin/add-apt-repository ppa:pitti/postgresql':
             alias => 'add-postgres-ppa',
-             creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list',
-            require => [Exec['update-postgresql-ppa'], Package['python-software-properties']];
+            creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list',
+            require => Package['python-software-properties'];
 
         '/usr/bin/psql -c "create role breakpad_rw login password \'aPassword\'"':
             alias => 'create-breakpad-role',
@@ -48,7 +49,7 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/psql breakpad < /usr/share/postgresql/8.4/contrib/citext.sql':
+        '/usr/bin/psql breakpad < /usr/share/postgresql/9.0/contrib/citext.sql':
             user => 'postgres',
             require => [Exec['create-breakpad-db'], Package['postgresql-contrib']];
     }
@@ -125,7 +126,7 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/psql test < /usr/share/postgresql/8.4/contrib/citext.sql':
+        '/usr/bin/psql test < /usr/share/postgresql/9.0/contrib/citext.sql':
             user => 'postgres',
             require => [Exec['create-test-db'], Package['postgresql-contrib']];
     }
@@ -145,7 +146,7 @@ class socorro-db inherits socorro-base {
     }
 
     service {
-        'postgresql-8.4':
+        'postgresql':
             enable => true,
             alias => postgresql,
             require => Package['postgresql'],
