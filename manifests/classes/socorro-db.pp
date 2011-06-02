@@ -1,17 +1,17 @@
 class socorro-db inherits socorro-base {
-    # FIXME upgrade to postgres 9
     package {
-	'postgresql-8.4':
+	'postgresql-9.0':
             alias => 'postgresql',
-            require => Exec['apt-get-update'],
+            require => [Exec['add-postgres-ppa'], Exec['apt-get-update']],
 	    ensure => 'present';
 
-	'postgresql-plperl-8.4':
+	'postgresql-plperl-9.0':
             alias => 'postgresql-plperl',
             require => Package['postgresql'],
 	    ensure => 'present';
 
-	'postgresql-contrib':
+	'postgresql-contrib-9.0':
+            alias => 'postgresql-contrib',
             require => Package['postgresql'],
 	    ensure => 'present';
     }
@@ -25,6 +25,14 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
+       'update-postgresql-ppa':
+            command => '/usr/bin/apt-get update';
+
+        '/usr/bin/sudo /usr/bin/add-apt-repository ppa:pitti/postgresql':
+            alias => 'add-postgres-ppa',
+             creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list',
+            require => [Exec['update-postgresql-ppa'], Package['python-software-properties']];
+
         '/usr/bin/psql -c "create role breakpad_rw login password \'aPassword\'"':
             alias => 'create-breakpad-role',
             unless => '/usr/bin/psql -c "SELECT rolname from pg_roles where rolname = \'breakpad_rw\'" breakpad | grep breakpad_rw',
