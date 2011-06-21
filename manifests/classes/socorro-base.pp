@@ -253,7 +253,7 @@ class socorro-python inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/make install':
+        '/usr/bin/make minidump_stackwalk && /usr/bin/make install':
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/trunk',
             timeout => '3600',
