@@ -153,6 +153,14 @@ class socorro-base {
         'python-software-properties':
             require => Exec['apt-get-update'],
             ensure => 'present';
+
+        'vim':
+            require => Exec['apt-get-update'],
+            ensure => 'present';
+
+        'emacs':
+            require => Exec['apt-get-update'],
+            ensure => 'present';
     }
 
     service {
