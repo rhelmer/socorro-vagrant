@@ -37,7 +37,6 @@ cd ~/dev/trunk
 vi (...)
 # as vagrant user
 sudo puppet /vagrant/manifests/init.pp
-# alternatively, you could run "make install" and restart services yourself
 
 The Socorro files will be installed to /data/socorro/ and puppet
 will restart any necessary services.
