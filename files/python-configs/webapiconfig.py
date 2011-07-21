@@ -59,11 +59,10 @@ import socorro.services.emailSubscription as emailsub
 import socorro.services.emailSender as emailsend
 import socorro.services.schedulePriorityJob as schedule
 import socorro.services.search as search
-import socorro.services.bugzilla as bugzilla
 
 servicesList = cm.Option()
 servicesList.doc = 'a python list of classes to offer as services'
-servicesList.default = [search.Search, tcbst.TopCrashBySignatureTrends, sighist.SignatureHistory, adubd.AduByDay, adubd.AduByDay200912, adudetails.AduByDayDetails, crash.GetCrash, emailcampaign.EmailCampaign, emailcreate.EmailCampaignCreate, emaillist.EmailCampaigns, emailvolume.EmailCampaignVolume, emailsub.EmailSubscription, emailsend.EmailSender, schedule.SchedulePriorityJob, bugzilla.Bugzilla]
+servicesList.default = [search.Search, tcbst.TopCrashBySignatureTrends, sighist.SignatureHistory, adubd.AduByDay, adubd.AduByDay200912, adudetails.AduByDayDetails, crash.GetCrash, emailcampaign.EmailCampaign, emailcreate.EmailCampaignCreate, emaillist.EmailCampaigns, emailvolume.EmailCampaignVolume, emailsub.EmailSubscription, emailsend.EmailSender, schedule.SchedulePriorityJob]
 
 crashBaseUrl = cm.Option()
 crashBaseUrl.doc = 'The base url for linking to crash-stats. This will be used in email templates'
@@ -98,7 +97,7 @@ platforms.doc = 'Array associating OS ids to full names.'
 platforms.default = (
     {
         "id" : "windows",
-        "name" : "Windows"
+        "name" : "Windows NT"
     },
     {
         "id" : "mac",
