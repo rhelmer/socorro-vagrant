@@ -34,7 +34,7 @@ wsgiInstallation.default = True
 # Can be socorro.search.elasticSearchAPI.ElasticSearchAPI or socorro.search.postgresAPI.PostgresAPI
 searchImplClass = cm.Option()
 searchImplClass.doc = 'String, the name of the class that implement the Search API.'
-searchImplClass.default = 'socorro.search.elasticSearchAPI.ElasticSearchAPI'
+searchImplClass.default = 'socorro.search.postgresAPI.PostgresAPI'
 searchImplClass.fromStringConverter = cm.classConverter
 
 # Elastic Search configuration
