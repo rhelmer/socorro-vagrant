@@ -28,6 +28,20 @@ query data:     http://socorro-api
 SSH into your VM:
 $ vagrant ssh
 
+The Socorro checkout is in:
+/home/socorro/dev/trunk
+
+To edit and install code:
+sudo su - socorro
+cd ~/dev/trunk
+vi (...)
+# as vagrant user
+sudo puppet /vagrant/manifests/init.pp
+# alternatively, you could run "make install" and restart services yourself
+
+The Socorro files will be installed to /data/socorro/ and puppet
+will restart any necessary services.
+
 ---
 KNOWN ISSUES
 ---
