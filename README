@@ -35,7 +35,6 @@ To edit and install code:
 sudo su - socorro
 cd ~/dev/trunk
 vi (...)
-# as vagrant user
 sudo puppet /vagrant/manifests/init.pp
 
 The Socorro files will be installed to /data/socorro/ and puppet

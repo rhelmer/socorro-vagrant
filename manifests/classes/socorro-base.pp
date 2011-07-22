@@ -186,6 +186,7 @@ class socorro-python inherits socorro-base {
 	ensure => 'present',
 	uid => '10000',
 	shell => '/bin/bash',
+    groups => 'admin',
 	managehome => true;
     }
 
