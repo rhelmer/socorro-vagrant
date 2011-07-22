@@ -7,6 +7,7 @@ import stat
 # imported config
 
 from config.commonconfig import databaseHost
+from config.commonconfig import databasePort
 from config.commonconfig import databaseName
 from config.commonconfig import databaseUserName
 from config.commonconfig import databasePassword
@@ -28,11 +29,16 @@ from config.commonconfig import secondaryHbaseTimeout
 
 temporaryFileSystemStoragePath = cm.Option()
 temporaryFileSystemStoragePath.doc = 'a local filesystem path where processor can write dumps temporarily for processing'
+#temporaryFileSystemStoragePath.default = './'
 temporaryFileSystemStoragePath.default = '/home/socorro/temp'
 
 #---------------------------------------------------------------------------
 # local processor config
 
+elasticSearchOoidSubmissionUrl = cm.Option()
+elasticSearchOoidSubmissionUrl.doc = 'a url to submit ooids for Elastic Search (use %s in place of the ooid) (leave blank for no Elastic Search)'
+#elasticSearchOoidSubmissionUrl.default = 'http://node14.generic.metrics.sjc1.mozilla.com:9999/queue/tasks/%s'
+elasticSearchOoidSubmissionUrl.default = ''
 
 numberOfThreads = cm.Option()
 numberOfThreads.doc = 'the number of threads to use'
