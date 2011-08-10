@@ -17,7 +17,7 @@ class socorro-db inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/createdb breakpad':
+        '/usr/bin/createdb -E \'utf-8\' -T template0 breakpad':
             require => Package['postgresql'],
             unless => '/usr/bin/psql --list breakpad',
             alias => 'create-breakpad-db',
