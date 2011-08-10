@@ -271,19 +271,6 @@ class socorro-python inherits socorro-base {
                         Package['ant'], File['/data/socorro'], Package['build-essential']],
             user => 'socorro';
     }
-
-    exec {
-        '/usr/bin/python /data/socorro/application/scripts/setupDatabase.py':
-            alias => 'setup-schema',
-            environment => ["PYTHONPATH=/data/socorro/application:/data/socorro/thirdparty",
-                            "databaseName=breakpad",
-                            "databaseUserName=breakpad_rw",
-                            "databasePassword=aPassword"],
-            timeout => '3600',
-            require => [File['python-configs'],
-                        Exec['alter-sessions-table']],
-            user => 'socorro';
-    }
 }
 
 class socorro-web inherits socorro-base {

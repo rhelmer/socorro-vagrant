@@ -34,18 +34,24 @@ class socorro-db inherits socorro-base {
             creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list',
             require => Package['python-software-properties'];
 
-        '/usr/bin/psql -c "create role breakpad_rw login password \'aPassword\'"':
-            alias => 'create-breakpad-role',
-            unless => '/usr/bin/psql -c "SELECT rolname from pg_roles where rolname = \'breakpad_rw\'" breakpad | grep breakpad_rw',
+        # FIXME hardcoded 2.2
+        '/usr/bin/psql -f /home/socorro/dev/trunk/scripts/schema/2.2/breakpad_roles.sql breakpad':
+            alias => 'create-breakpad-roles',
             user => 'postgres',
             require => Exec['create-breakpad-db'];
+
+        # FIXME hardcoded 2.2
+        '/usr/bin/psql -f /home/socorro/dev/trunk/scripts/schema/2.2/breakpad_schema.sql breakpad':
+            alias => 'setup-schema',
+            user => 'postgres',
+            require => [Exec['create-breakpad-roles'], Exec['socorro-checkout']];
     }
 
     exec {
         '/usr/bin/psql -c "grant all on database breakpad to breakpad_rw"':
             alias => 'grant-breakpad-access',
             user => 'postgres',
-            require => Exec['create-breakpad-role'];
+            require => Exec['create-breakpad-roles'];
     }
 
     exec {
@@ -82,7 +88,7 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -c "ALTER TABLE sessions OWNER TO breakpad_rw" breakpad':
             alias => 'alter-sessions-table',
             user => 'postgres',
-            require => [Exec['create-sessions-table'], Exec['create-breakpad-role']];
+            require => [Exec['create-sessions-table'], Exec['create-breakpad-roles']];
     }
 
     exec {
