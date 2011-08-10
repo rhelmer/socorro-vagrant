@@ -6,7 +6,7 @@ environment in a local VM.
 INSTALL
 ---
 
-1) Install http://www.virtualbox.org/ (4.0.x)
+1) Install http://www.virtualbox.org/
 
 2) Run vagrant (http://vagrantup.com/) :
 
