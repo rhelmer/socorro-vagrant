@@ -38,7 +38,7 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -f /home/socorro/dev/trunk/scripts/schema/2.2/breakpad_roles.sql breakpad':
             alias => 'create-breakpad-roles',
             user => 'postgres',
-            require => Exec['create-breakpad-db'];
+            require => [Exec['create-breakpad-db'], Exec['socorro-checkout']];
 
         # FIXME hardcoded 2.2
         '/usr/bin/psql -f /home/socorro/dev/trunk/scripts/schema/2.2/breakpad_schema.sql breakpad':
