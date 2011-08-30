@@ -60,11 +60,10 @@ import socorro.services.emailSender as emailsend
 import socorro.services.schedulePriorityJob as schedule
 import socorro.services.search as search
 import socorro.services.bugzilla as bugzilla
-import socorro.services.topCrashBySignature as tcbs
 
 servicesList = cm.Option()
 servicesList.doc = 'a python list of classes to offer as services'
-servicesList.default = [search.Search, tcbst.TopCrashBySignatureTrends, sighist.SignatureHistory, adubd.AduByDay, adubd.AduByDay200912, adudetails.AduByDayDetails, crash.GetCrash, emailcampaign.EmailCampaign, emailcreate.EmailCampaignCreate, emaillist.EmailCampaigns, emailvolume.EmailCampaignVolume, emailsub.EmailSubscription, emailsend.EmailSender, schedule.SchedulePriorityJob, bugzilla.Bugzilla, tcbs.TopCrashBySignature]
+servicesList.default = [search.Search, tcbst.TopCrashBySignatureTrends, sighist.SignatureHistory, adubd.AduByDay, adubd.AduByDay200912, adudetails.AduByDayDetails, crash.GetCrash, emailcampaign.EmailCampaign, emailcreate.EmailCampaignCreate, emaillist.EmailCampaigns, emailvolume.EmailCampaignVolume, emailsub.EmailSubscription, emailsend.EmailSender, schedule.SchedulePriorityJob, bugzilla.Bugzilla]
 
 crashBaseUrl = cm.Option()
 crashBaseUrl.doc = 'The base url for linking to crash-stats. This will be used in email templates'
