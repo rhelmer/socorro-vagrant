@@ -178,6 +178,9 @@ class socorro-base {
             ensure => running;
     }
 
+    group { 'puppet':
+        ensure => 'present',
+    }
 }
 
 class socorro-python inherits socorro-base {

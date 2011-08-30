@@ -9,6 +9,7 @@ Vagrant::Config.run do |config|
   #config.vm.boot_mode = :gui
   config.vm.provision :puppet do |puppet|
     puppet.manifest_file = "init.pp"
-    puppet.options = "--verbose --debug"
+    # enable this to see verbose and debug puppet output
+    #puppet.options = "--verbose --debug"
   end
 end
