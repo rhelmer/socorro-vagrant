@@ -241,6 +241,10 @@ class socorro-python inherits socorro-base {
             require => Exec['apt-get-update'],
             ensure => present;
 
+	'git-core':
+            require => Exec['apt-get-update'],
+            ensure => present;
+
         'libpq-dev':
             require => Exec['apt-get-update'],
             ensure => 'present';
@@ -256,7 +260,7 @@ class socorro-python inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/touch timestamp && /usr/bin/svn checkout http://socorro.googlecode.com/svn/trunk/':
+        '/usr/bin/touch timestamp && /usr/bin/git clone git://github.com/mozilla/socorro.git':
             alias => 'socorro-checkout',
             cwd => '/home/socorro/dev',
             timeout => '3600',
@@ -267,9 +271,9 @@ class socorro-python inherits socorro-base {
     exec {
         '/usr/bin/make minidump_stackwalk && /usr/bin/make install':
             alias => 'socorro-install',
-            cwd => '/home/socorro/dev/trunk',
+            cwd => '/home/socorro/dev/socorro',
             timeout => '3600',
-            onlyif => '/usr/bin/find . -newer /home/socorro/dev/timestamp  | /bin/grep -v ".svn"',
+            onlyif => '/usr/bin/find . -newer /home/socorro/dev/timestamp  | /bin/grep -v ".git"',
             require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], 
                         Package['ant'], File['/data/socorro'], Package['build-essential']],
             user => 'socorro';

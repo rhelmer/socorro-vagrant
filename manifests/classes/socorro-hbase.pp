@@ -42,7 +42,7 @@ class socorro-hbase {
 
     # FIXME add real LZO support, remove hack here
     exec {
-        '/bin/cat /home/socorro/dev/trunk/analysis/hbase_schema | sed \'s/LZO/NONE/g\' | /usr/bin/hbase shell':
+        '/bin/cat /home/socorro/dev/socorro/analysis/hbase_schema | sed \'s/LZO/NONE/g\' | /usr/bin/hbase shell':
             alias => 'hbase-schema',
             unless => '/bin/echo "describe \'crash_reports\'" | /usr/bin/hbase shell  | grep "1 row"',
             require => Service['hadoop-hbase-master'];
