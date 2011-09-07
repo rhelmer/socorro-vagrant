@@ -260,12 +260,22 @@ class socorro-python inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/touch timestamp && /usr/bin/git clone git://github.com/mozilla/socorro.git':
-            alias => 'socorro-checkout',
+        '/usr/bin/git clone git://github.com/mozilla/socorro.git':
+            alias => 'socorro-clone',
             cwd => '/home/socorro/dev',
+            creates => '/home/socorro/dev/socorro',
             timeout => '3600',
             user => 'socorro',
-            require => Package['subversion'],
+            require => Package['git-core'],
+    }
+
+    exec {
+        '/usr/bin/git pull':
+            alias => 'socorro-pull',
+            cwd => '/home/socorro/dev/socorro',
+            timeout => '3600',
+            user => 'socorro',
+            require => Exec['socorro-clone'],
     }
 
     exec {
@@ -273,8 +283,7 @@ class socorro-python inherits socorro-base {
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/socorro',
             timeout => '3600',
-            onlyif => '/usr/bin/find . -newer /home/socorro/dev/timestamp  | /bin/grep -v ".git"',
-            require => [Package['libcurl4-openssl-dev'], Exec['socorro-checkout'], 
+            require => [Package['libcurl4-openssl-dev'], Exec['socorro-pull'], 
                         Package['ant'], File['/data/socorro'], Package['build-essential']],
             user => 'socorro';
     }
