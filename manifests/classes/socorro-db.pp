@@ -45,7 +45,7 @@ class socorro-db inherits socorro-base {
             alias => 'setup-schema',
             user => 'postgres',
             require => [Exec['create-breakpad-roles'], Exec['socorro-pull']],
-            unless => '/usr/bin/psql -U breakpad_rw -h localhost breakpad -c "\d reports" 2>&1 | grep "Did not find any relation"';
+            onlyif => '/usr/bin/psql breakpad -c "\d reports" 2>&1 | grep "Did not find any relation"';
     }
 
     exec {
