@@ -103,7 +103,7 @@ class socorro-base {
 
     exec {
         '/usr/bin/apt-get update':
-            alias => 'apt-get-update';
+            alias => 'apt-get-update',
     }
 
     exec {
@@ -116,6 +116,7 @@ class socorro-base {
     exec {
         'update-partner-repo':
             require => Exec['add-partner-repo'],
+            unless => '/bin/grep "^deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list',
             command => '/usr/bin/apt-get update';
     }
 
