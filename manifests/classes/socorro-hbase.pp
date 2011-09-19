@@ -31,14 +31,12 @@ class socorro-hbase {
         'apt-get-update-cloudera':
             command => '/usr/bin/apt-get update',
             require => [Exec['update-partner-repo'],
-                        File['/etc/apt/sources.list.d/cloudera.list']],
-            creates => '/etc/apt/sources.list.d/cloudera.list',
+                        File['/etc/apt/sources.list.d/cloudera.list']];
     }
 
     exec {
         '/usr/bin/curl -s http://archive.cloudera.com/debian/archive.key | /usr/bin/sudo /usr/bin/apt-key add -':
             alias => 'add-cloudera-key',
-            creates => '/etc/apt/sources.list.d/cloudera.list',
             require => Package['curl'];
     }
 

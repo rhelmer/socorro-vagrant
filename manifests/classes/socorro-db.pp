@@ -27,8 +27,7 @@ class socorro-db inherits socorro-base {
     exec {
        'update-postgres-ppa':
             command => '/usr/bin/apt-get update',
-            require => Exec['add-postgres-ppa'],
-            creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list';
+            require => Exec['add-postgres-ppa'];
 
         '/usr/bin/sudo /usr/bin/add-apt-repository ppa:pitti/postgresql':
             alias => 'add-postgres-ppa',
