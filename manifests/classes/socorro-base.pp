@@ -271,12 +271,23 @@ class socorro-python inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/make minidump_stackwalk && /usr/bin/make install':
+        '/usr/bin/make minidump_stackwalk':
+            alias => 'minidump_stackwalk-install',
+            cwd => '/home/socorro/dev/socorro',
+            creates => '/home/socorro/dev/socorro/stackwalk',
+            timeout => '3600',
+            require => [Package['libcurl4-openssl-dev'], Exec['socorro-clone'], 
+                        File['/data/socorro'], Package['build-essential']],
+            user => 'socorro';
+    }
+
+    exec {
+        '/usr/bin/make install':
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/socorro',
             timeout => '3600',
-            require => [Package['libcurl4-openssl-dev'], Exec['socorro-clone'], 
-                        Package['ant'], File['/data/socorro'], Package['build-essential']],
+            require => [Exec['socorro-clone'], Package['ant'], File['/data/socorro'],
+                        Exec['minidump_stackwalk-install']],
             user => 'socorro';
     }
 }
