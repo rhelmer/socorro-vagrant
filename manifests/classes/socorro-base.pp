@@ -167,7 +167,7 @@ class socorro-base {
     service {
         supervisor:
             enable => true,
-            stop => '/usr/bin/service supervisor force-stop && /bin/sleep 10',
+            stop => '/usr/bin/service supervisor force-stop',
             hasstatus => true,
             require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift'],
                         Exec['setup-schema'], Exec['hbase-schema']],
