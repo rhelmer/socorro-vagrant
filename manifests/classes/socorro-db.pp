@@ -38,13 +38,13 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -f /home/socorro/dev/socorro/scripts/schema/2.2/breakpad_roles.sql breakpad':
             alias => 'create-breakpad-roles',
             user => 'postgres',
-            require => [Exec['create-breakpad-db'], Exec['socorro-pull']];
+            require => [Exec['create-breakpad-db'], Exec['socorro-clone']];
 
         # FIXME hardcoded 2.2
         '/usr/bin/psql -f /home/socorro/dev/socorro/scripts/schema/2.2/breakpad_schema.sql breakpad':
             alias => 'setup-schema',
             user => 'postgres',
-            require => [Exec['create-breakpad-roles'], Exec['socorro-pull']],
+            require => [Exec['create-breakpad-roles'], Exec['socorro-clone']],
             onlyif => '/usr/bin/psql breakpad -c "\d reports" 2>&1 | grep "Did not find any relation"';
     }
 

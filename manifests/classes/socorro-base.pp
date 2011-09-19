@@ -270,20 +270,11 @@ class socorro-python inherits socorro-base {
     }
 
     exec {
-        '/usr/bin/git pull':
-            alias => 'socorro-pull',
-            cwd => '/home/socorro/dev/socorro',
-            timeout => '3600',
-            user => 'socorro',
-            require => Exec['socorro-clone'],
-    }
-
-    exec {
         '/usr/bin/make minidump_stackwalk && /usr/bin/make install':
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/socorro',
             timeout => '3600',
-            require => [Package['libcurl4-openssl-dev'], Exec['socorro-pull'], 
+            require => [Package['libcurl4-openssl-dev'], Exec['socorro-clone'], 
                         Package['ant'], File['/data/socorro'], Package['build-essential']],
             user => 'socorro';
     }
