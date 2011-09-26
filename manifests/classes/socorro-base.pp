@@ -37,15 +37,6 @@ class socorro-base {
             require => Exec['socorro-install'],
 	    target=> "/data/socorro/application/scripts/crons/socorrorc";
 
-	 'python-configs':
-            path => "/data/socorro/application/scripts/config",
-            owner => socorro,
-            group => root,
-            recurse => true,
-            require => Exec['socorro-install'],
-	    notify => Service[supervisor],
-            source => "/vagrant/files/python-configs";
-
 	'/etc/rsyslog.conf':
             require => Package[rsyslog],
 	    owner => root,
@@ -54,14 +45,6 @@ class socorro-base {
 	    ensure => present,
 	    notify => Service[rsyslog],
 	    source => "/vagrant/files/rsyslog.conf";
-
-	 'php-configs':
-            path => "/data/socorro/htdocs/application/config",
-            owner => socorro,
-            group => root,
-            recurse => true,
-            require => Exec['socorro-install'],
-            source => "/vagrant/files/php-configs";
 
 	 'hbase-configs':
             path => "/etc/hbase/conf/",
@@ -73,7 +56,7 @@ class socorro-base {
 	 'etc_supervisor':
             path => "/etc/supervisor/conf.d/",
             recurse => true,
-            require => Package['supervisor'],
+            require => [Package['supervisor'], Exec['socorro-install']],
 	    notify => Service[supervisor],
             source => "/vagrant/files/etc_supervisor";
 
@@ -341,10 +324,8 @@ class socorro-web inherits socorro-base {
             enable => true,
             ensure => running,
             hasstatus => true,
-            subscribe => File[python-configs],
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl],
-                        File[python-configs], File[php-configs],
                         Package[php5], Exec[enable-mod-proxy]];
     }
 
