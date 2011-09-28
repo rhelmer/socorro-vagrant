@@ -35,13 +35,13 @@ class socorro-db inherits socorro-base {
             require => Package['python-software-properties'];
 
         # FIXME hardcoded 2.2
-        '/usr/bin/psql -f /home/socorro/dev/socorro/scripts/schema/2.2/breakpad_roles.sql breakpad':
+        '/usr/bin/psql -f /home/socorro/dev/socorro/sql/schema/2.2/breakpad_roles.sql breakpad':
             alias => 'create-breakpad-roles',
             user => 'postgres',
             require => [Exec['create-breakpad-db'], Exec['socorro-clone']];
 
         # FIXME hardcoded 2.2
-        '/usr/bin/psql -f /home/socorro/dev/socorro/scripts/schema/2.2/breakpad_schema.sql breakpad':
+        '/usr/bin/psql -f /home/socorro/dev/socorro/sql/schema/2.2/breakpad_schema.sql breakpad':
             alias => 'setup-schema',
             user => 'postgres',
             require => [Exec['create-breakpad-roles'], Exec['socorro-clone']],
