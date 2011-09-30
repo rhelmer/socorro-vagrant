@@ -48,6 +48,24 @@ services as-needed):
 
 
 ---
+LOADING DATA
+---
+
+If you have access to an existing Socorro database snapshot, you can load it like so:
+
+ sudo su - postgres
+ dropdb breakpad
+ createdb breakpad
+ pg_restore -Fc -v -d breakpad /tmp/minidb.dump
+
+This may take several hours, depending on your hardware. One way to speed this up would
+be to :
+
+* add more CPU cores to the VM (via virtualbox GUI), default is 1
+* add "-j n" to pg_restore command above, where n is number of CPU cores - 1
+
+
+---
 KNOWN ISSUES
 ---
 
