@@ -13,6 +13,19 @@ INSTALL
  git clone git://github.com/rhelmer/socorro-vagrant.git
  cd socorro-vagrant
  gem install vagrant
+=======
+
+ --
+ NOTE: To install Vagrant on a 64 bit Windows installation, you need to follow this process:
+
+   * Download Java JRE (http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+   * Download JRuby (http://jruby.org/download)
+
+  From the command line first run:
+  jgem install jruby-openssl jruby-win32ole
+  jgem install vagrant
+ --
+
  vagrant box add lucid64 http://files.vagrantup.com/lucid64.box
  vagrant up
 
@@ -56,7 +69,7 @@ If you have access to an existing Socorro database snapshot, you can load it lik
  sudo su - postgres
  dropdb breakpad
  createdb -E 'utf8' -l 'en_US.utf8' -T template0 breakpad
- pg_restore -Fc -v -d breakpad minidb.dump
+ pg_restore -Fc -d breakpad minidb.dump
 
 This may take several hours, depending on your hardware. One way to speed this up would
 be to :

@@ -4,7 +4,9 @@ Vagrant::Config.run do |config|
   config.vm.customize do |vm|
     # 1GB
     vm.memory_size = 1024
-    # vm.cpu_count = 4
+    # enable this if you need more cores, e.g. for pg_restore
+    # default is 1
+    #vm.cpu_count = 4
   end
   # enable this to see the GUI if vagrant cannot connect
   #config.vm.boot_mode = :gui
