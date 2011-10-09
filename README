@@ -13,7 +13,7 @@ INSTALL
  git clone git://github.com/rhelmer/socorro-vagrant.git
  cd socorro-vagrant
  gem install vagrant
- vagrant box add socorro-all http://files.vagrantup.com/lucid64.box
+ vagrant box add lucid64 http://files.vagrantup.com/lucid64.box
  vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:
@@ -55,8 +55,8 @@ If you have access to an existing Socorro database snapshot, you can load it lik
 
  sudo su - postgres
  dropdb breakpad
- createdb breakpad
- pg_restore -Fc -v -d breakpad /tmp/minidb.dump
+ createdb -E 'utf8' -l 'en_US.utf8' -T template0 breakpad
+ pg_restore -Fc -v -d breakpad minidb.dump
 
 This may take several hours, depending on your hardware. One way to speed this up would
 be to :
