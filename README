@@ -26,7 +26,7 @@ INSTALL
   jgem install vagrant
  --
 
- vagrant box add lucid64 http://files.vagrantup.com/lucid64.box
+ vagrant box add socorro-all http://files.vagrantup.com/lucid64.box
  vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:

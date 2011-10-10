@@ -1,5 +1,5 @@
 Vagrant::Config.run do |config|
-  config.vm.box = "lucid64"
+  config.vm.box = "socorro-all"
   config.vm.network "33.33.33.10"
   config.vm.customize do |vm|
     # 1GB
