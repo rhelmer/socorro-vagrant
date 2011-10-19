@@ -70,6 +70,11 @@ LOADING DATA
 
 If you have access to an existing Socorro database snapshot, you can load it like so:
 
+ # shut down database users
+ sudo /etc/init.d/supervisor force-stop
+ sudo /etc/init.d/apache stop
+
+ # drop old db and load snapshot
  sudo su - postgres
  dropdb breakpad
  createdb -E 'utf8' -l 'en_US.utf8' -T template0 breakpad
