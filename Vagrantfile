@@ -9,7 +9,7 @@ Vagrant::Config.run do |config|
     #vm.cpu_count = 4
   end
   # enable this to see the GUI if vagrant cannot connect
-  #config.vm.boot_mode = :gui
+  config.vm.boot_mode = :gui
   config.vm.provision :puppet do |puppet|
     puppet.manifest_file = "init.pp"
     # enable this to see verbose and debug puppet output
