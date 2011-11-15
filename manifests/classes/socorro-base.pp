@@ -314,6 +314,10 @@ class socorro-web inherits socorro-base {
             ensure => latest,
             require => [Exec['apt-get-update'], Exec['socorro-install']];
 
+        'libapache2-mod-php5':
+            require => Package[apache2],
+            ensure => 'present';
+
         'libapache2-mod-wsgi':
             require => Package[apache2],
             ensure => 'present';
@@ -326,7 +330,8 @@ class socorro-web inherits socorro-base {
             hasstatus => true,
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl],
-                        Package[php5], Exec[enable-mod-proxy]];
+                        Exec[enable-mod-php5],
+                        Package[libapache2-mod-php5], Exec[enable-mod-proxy]];
     }
 
 }
@@ -393,6 +398,11 @@ class socorro-php inherits socorro-web {
     exec {
         '/usr/sbin/a2enmod rewrite':
             alias => 'enable-mod-rewrite',
+            require => File['crash-stats-vhost'],
+    }
+    exec {
+        '/usr/sbin/a2enmod php5':
+            alias => 'enable-mod-php5',
             require => File['crash-stats-vhost'],
     }
 
