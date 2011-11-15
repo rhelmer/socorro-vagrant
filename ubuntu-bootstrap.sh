@@ -6,6 +6,8 @@
 # using Puppet and automatically install a full Socorro environment on it.
 #
 
+apt-get install git-core puppet
+
 GIT_REPO_URL="git://github.com/rhelmer/socorro-vagrant.git"
 
 # Clone the project from github
