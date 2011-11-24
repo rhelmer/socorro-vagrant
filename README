@@ -68,7 +68,9 @@ services as-needed):
 LOADING DATA
 ---
 
-If you have access to an existing Socorro database snapshot, you can load it like so:
+If you are starting a new Socorro database, refer to: http://socorro.readthedocs.org/en/latest/populatepostgres.html
+
+Or, if you have access to an existing Socorro database snapshot, you can load it like so:
 
  # shut down database users
  sudo /etc/init.d/supervisor force-stop
@@ -93,10 +95,3 @@ KNOWN ISSUES
 
 * HBase
 ** need to install LZO, remove sed hack
-
-* need moar data
-** https://bugzilla.mozilla.org/show_bug.cgi?id=653609
-** https://bugzilla.mozilla.org/show_bug.cgi?id=652248
-
-* aggregate reports (top crashers, etc) do not work without existing data
-** https://bugzilla.mozilla.org/show_bug.cgi?id=653362
