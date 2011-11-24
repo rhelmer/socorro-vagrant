@@ -13,24 +13,10 @@ INSTALL
  git clone git://github.com/rhelmer/socorro-vagrant.git
  cd socorro-vagrant
  gem install vagrant
-=======
 
- --
- NOTE: To install Vagrant on a 64 bit Windows installation, you need to follow this process:
-
-   * Download Java JRE (http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-   * Download JRuby (http://jruby.org/download)
-
-  From the command line first run:
-  jgem install jruby-openssl jruby-win32ole
-  jgem install vagrant
- --
-
+ # NOTE: if you have a 32-bit host, change "lucid64" to "lucid32"
  vagrant box add socorro-all http://files.vagrantup.com/lucid64.box
  
- NOTE: if you have a 32-bit host, grab the 32-bit base box instead:
-   vagrant box add socorro-all http://files.vagrantup.com/lucid32.box
-
  vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:
