@@ -1,5 +1,5 @@
 This project will use vagrant and puppet to 
-install a complete Socorro (http://code.google.com/p/socorro/) 
+install a complete Socorro (https://github.com/mozilla/socorro) 
 environment in a local VM.
 
 ---
@@ -20,6 +20,7 @@ INSTALL
  vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:
+
 33.33.33.10	crash-stats crash-reports socorro-api
 
 4) Enjoy your Socorro environment!
@@ -33,6 +34,8 @@ SSH into your VM:
 
 The Socorro checkout is in:
 /home/socorro/dev/socorro
+
+Socorro documentation (including developer docs) can be found at: http://socorro.readthedocs.org/
 
 To edit and install code (after doing "vagrant ssh"):
  sudo su - socorro
