@@ -1,5 +1,5 @@
 This project will use vagrant and puppet to 
-install a complete Socorro (http://code.google.com/p/socorro/) 
+install a complete Socorro (https://github.com/mozilla/socorro) 
 environment in a local VM.
 
 ---
@@ -13,27 +13,14 @@ INSTALL
  git clone git://github.com/rhelmer/socorro-vagrant.git
  cd socorro-vagrant
  gem install vagrant
-=======
 
- --
- NOTE: To install Vagrant on a 64 bit Windows installation, you need to follow this process:
-
-   * Download Java JRE (http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-   * Download JRuby (http://jruby.org/download)
-
-  From the command line first run:
-  jgem install jruby-openssl jruby-win32ole
-  jgem install vagrant
- --
-
+ # NOTE: if you have a 32-bit host, change "lucid64" to "lucid32"
  vagrant box add socorro-all http://files.vagrantup.com/lucid64.box
  
- NOTE: if you have a 32-bit host, grab the 32-bit base box instead:
-   vagrant box add socorro-all http://files.vagrantup.com/lucid32.box
-
  vagrant up
 
 3) Add 33.33.33.10 to /etc/hosts:
+
 33.33.33.10	crash-stats crash-reports socorro-api
 
 4) Enjoy your Socorro environment!
@@ -47,6 +34,8 @@ SSH into your VM:
 
 The Socorro checkout is in:
 /home/socorro/dev/socorro
+
+Socorro documentation (including developer docs) can be found at: http://socorro.readthedocs.org/
 
 To edit and install code (after doing "vagrant ssh"):
  sudo su - socorro
@@ -68,7 +57,9 @@ services as-needed):
 LOADING DATA
 ---
 
-If you have access to an existing Socorro database snapshot, you can load it like so:
+If you are starting a new Socorro database, refer to: http://socorro.readthedocs.org/en/latest/populatepostgres.html
+
+Or, if you have access to an existing Socorro database snapshot, you can load it like so:
 
  # shut down database users
  sudo /etc/init.d/supervisor force-stop
@@ -93,10 +84,3 @@ KNOWN ISSUES
 
 * HBase
 ** need to install LZO, remove sed hack
-
-* need moar data
-** https://bugzilla.mozilla.org/show_bug.cgi?id=653609
-** https://bugzilla.mozilla.org/show_bug.cgi?id=652248
-
-* aggregate reports (top crashers, etc) do not work without existing data
-** https://bugzilla.mozilla.org/show_bug.cgi?id=653362
