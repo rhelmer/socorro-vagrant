@@ -121,6 +121,10 @@ class socorro-base {
             require => Exec['apt-get-update'],
             ensure => present;
 
+        'libxslt1-dev':
+            require => Exec['apt-get-update'],
+            ensure => present;
+
         'build-essential':
             require => Exec['apt-get-update'],
             ensure => present;
