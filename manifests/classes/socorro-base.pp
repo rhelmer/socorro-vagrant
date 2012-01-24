@@ -85,6 +85,12 @@ class socorro-base {
     }
 
     exec {
+        '/usr/bin/pip install isodate':
+            require => Package['python-pip'],
+            logoutput => on_failure;
+    }
+
+    exec {
         '/usr/bin/apt-get update':
             alias => 'apt-get-update';
     }
@@ -146,6 +152,10 @@ class socorro-base {
             ensure => 'present';
 
         'emacs':
+            require => Exec['apt-get-update'],
+            ensure => 'present';
+
+        'python-pip':
             require => Exec['apt-get-update'],
             ensure => 'present';
     }
