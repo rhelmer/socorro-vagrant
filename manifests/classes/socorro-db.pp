@@ -34,12 +34,12 @@ class socorro-db inherits socorro-base {
             creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list',
             require => Package['python-software-properties'];
 
-        '/usr/bin/psql -f /home/socorro/dev/socorro/sql/schema/2.3/breakpad_roles.sql breakpad':
+        '/usr/bin/psql -f /home/socorro/dev/socorro/sql/schema/2.4/breakpad_roles.sql breakpad':
             alias => 'create-breakpad-roles',
             user => 'postgres',
             require => [Exec['create-breakpad-db'], Exec['socorro-clone']];
 
-        '/usr/bin/psql -f /home/socorro/dev/socorro/sql/schema/2.3/breakpad_schema.sql breakpad':
+        '/usr/bin/psql -f /home/socorro/dev/socorro/sql/schema/2.4/breakpad_schema.sql breakpad':
             alias => 'setup-schema',
             user => 'postgres',
             require => [Exec['create-breakpad-roles'], Exec['socorro-clone']],
