@@ -63,7 +63,7 @@ Or, if you have access to an existing Socorro database snapshot, you can load it
 
  # shut down database users
  sudo /etc/init.d/supervisor force-stop
- sudo /etc/init.d/apache stop
+ sudo /etc/init.d/apache2 stop
 
  # drop old db and load snapshot
  sudo su - postgres
