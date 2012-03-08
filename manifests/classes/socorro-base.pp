@@ -5,6 +5,13 @@
 class socorro-base {
 
     file {
+        '/etc/profile':
+	    owner => root,
+	    group => root,
+	    mode => 644,
+	    ensure => present,
+	    source => "/vagrant/files/profile";
+            
 	'/etc/hosts':
 	    owner => root,
 	    group => root,
@@ -96,23 +103,10 @@ class socorro-base {
     }
 
     exec {
-        '/usr/bin/sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"':
-            alias => 'add-partner-repo',
-            unless => '/bin/grep "^deb http://archive.canonical.com/ lucid partner" /etc/apt/sources.list',
-            require => Package['python-software-properties'];
+        '/usr/bin/curl http://download.oracle.com/otn-pub/java/jdk/7u3-b04/jdk-7u3-linux-x64.tar.gz | tar -C /data -zxf -':
+            alias => 'install-oracle-jdk',
+            unless => '/usr/bin/file /data/jdk1.7.0_03/';
     }   
-
-    exec {
-        'update-partner-repo':
-            require => Exec['add-partner-repo'],
-            command => '/usr/bin/apt-get update';
-    }
-
-    exec {
-        '/bin/echo sun-java6-jdk shared/accepted-sun-dlj-v1-1 boolean true | debconf-set-selections':
-            alias => 'accept-java',
-            require => Exec['update-partner-repo'];
-    }
 
     package {
         'supervisor':
@@ -135,12 +129,7 @@ class socorro-base {
             require => Exec['apt-get-update'],
             ensure => present;
 
-        'sun-java6-jdk':
-            require => [Exec['apt-get-update'], Exec['accept-java']],
-            ensure => present;
-
         'ant':
-            require => Package['sun-java6-jdk'],
             ensure => present;
 
         'python-software-properties':

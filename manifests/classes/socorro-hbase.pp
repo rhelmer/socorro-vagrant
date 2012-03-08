@@ -9,7 +9,7 @@ class socorro-hbase {
     package {
         'hadoop-hbase':
             ensure => 'present',
-            require => [Exec['apt-get-update-cloudera'], Package['sun-java6-jdk']];
+            require => [Exec['apt-get-update-cloudera']];
 
         'hadoop-hbase-master':
             ensure => 'present',
@@ -30,7 +30,7 @@ class socorro-hbase {
     exec { 
         'apt-get-update-cloudera':
             command => '/usr/bin/apt-get update',
-            require => [Exec['update-partner-repo'],
+            require => [Exec['install-oracle-jdk'],
                         File['/etc/apt/sources.list.d/cloudera.list']];
     }
 
