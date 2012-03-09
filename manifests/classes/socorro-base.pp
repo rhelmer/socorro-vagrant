@@ -188,7 +188,8 @@ class socorro-python inherits socorro-base {
             creates => '/home/socorro/dev/socorro/stackwalk',
             timeout => '3600',
             require => [Package['libcurl4-openssl-dev'],
-                        File['/data/socorro'], Package['build-essential']],
+                        File['/data/socorro'], Package['build-essential'],
+                        Package['subversion']],
             user => 'socorro';
     }
 
