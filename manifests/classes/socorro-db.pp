@@ -2,18 +2,18 @@ class socorro-db inherits socorro-base {
     package {
 	'postgresql-9.0':
             alias => 'postgresql',
-            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']],
-	    ensure => 'present';
+	    ensure => latest,
+            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']];
 
 	'postgresql-plperl-9.0':
             alias => 'postgresql-plperl',
-            require => Package['postgresql'],
-	    ensure => 'present';
+            ensure => latest,
+            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']];
 
-	'postgresql-contrib-9.0':
+        'postgresql-contrib-9.0':
             alias => 'postgresql-contrib',
-            require => Package['postgresql'],
-	    ensure => 'present';
+            ensure => latest,
+            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']];
     }
 
     exec {
@@ -136,10 +136,8 @@ class socorro-db inherits socorro-base {
             require => [Exec['create-test-db'], Package['postgresql-plperl']];
     }
 
-    service {
-        'postgresql':
+    service { 'postgresql':
             enable => true,
-            alias => postgresql,
             require => Package['postgresql'],
             ensure => running;
     }

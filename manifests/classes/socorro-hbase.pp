@@ -7,24 +7,10 @@ class socorro-hbase {
     }
 
     package {
-        'hadoop-hbase':
-            ensure => 'present',
-            require => [Exec['apt-get-update-cloudera']];
-
-        'hadoop-hbase-master':
-            ensure => 'present',
-            require => Package['hadoop-hbase'];
-
-        'hadoop-hbase-thrift':
-            ensure => 'present',
-            require => Package['hadoop-hbase'];
-
-        'curl':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'liblzo2-dev':
-            ensure => 'present';
+        ['hadoop-hbase', 'hadoop-hbase-master', 'hadoop-hbase-thrift',
+         'liblzo2-dev']:
+            ensure => latest,
+            require => [Exec['apt-get-update'],Exec['apt-get-update-cloudera']];
     }
 
     exec { 

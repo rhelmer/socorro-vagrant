@@ -14,22 +14,13 @@ class socorro-processor inherits socorro-python {
 	 "/mnt/socorro/symbols":
 	    ensure => directory;
 	}
-# FIXME replace w/ supervisor
-#    service {
-#	"socorro-processor":
-#            enable => false,
-#            ensure => running,
-#	    hasstatus => true,
-#	    subscribe => File["etc-socorro"],
-#            require => File["/etc/init.d/socorro-processor"];
-#    }
-    package { 
-	"nfs-common": 
-            require => Exec['apt-get-update'],
-            ensure => "latest";
+
+    package { "nfs-common": 
+        ensure => latest,
+        require => Exec['apt-get-update'];
     }   
 
-# FIXME
+# FIXME how to fake symbols?
 #    mount { 
 #	"/mnt/socorro/symbols":
 #	    device => $fqdn ? {

@@ -42,15 +42,5 @@ class socorro-collector inherits socorro-web {
             require => File['crash-reports-vhost'],
     }
 
-# FIXME replace w/ supervisor
-#    service {
-#	"socorro-crashmover":
-#            enable => false,
-#            ensure => running,
-#	    hasstatus => true,
-#	    subscribe => File["etc-socorro"],
-#            require => [ File["/etc/init.d/socorro-crashmover"]];
-#    }
-
     include socorro-python
 }

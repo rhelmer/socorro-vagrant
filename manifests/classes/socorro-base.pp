@@ -67,13 +67,6 @@ class socorro-base {
 	    notify => Service[supervisor],
             source => "/vagrant/files/etc_supervisor";
 
-# FIXME
-#	 'data-bin':
-#	    path => "/data/bin/",
-#	    recurse => true,
-#	    ignore => [".svn"],
-#	    source => "/vagrant/files/data-bin";
-
         '/var/log/socorro':
             mode  => 644,
 	    recurse=> true,
@@ -105,48 +98,16 @@ class socorro-base {
     exec {
         '/usr/bin/curl http://download.oracle.com/otn-pub/java/jdk/7u3-b04/jdk-7u3-linux-x64.tar.gz | tar -C /data -zxf -':
             alias => 'install-oracle-jdk',
-            unless => '/usr/bin/file /data/jdk1.7.0_03/';
+            unless => '/usr/bin/file /data/jdk1.7.0_03/',
+            require => Package['curl'];
     }   
 
     package {
-        'supervisor':
-            ensure => present,
+        ['rsyslog', 'libcurl4-openssl-dev', 'libxslt1-dev', 'build-essential',
+         'supervisor', 'ant', 'python-software-properties', 'vim', 'emacs',
+         'python-pip', 'curl']:
+            ensure => latest,
             require => Exec['apt-get-update'];
-
-        'rsyslog':
-            ensure => present,
-            require => Exec['apt-get-update'];
-
-        'libcurl4-openssl-dev':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-        'libxslt1-dev':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-        'build-essential':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-        'ant':
-            ensure => present;
-
-        'python-software-properties':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'vim':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'emacs':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'python-pip':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
     }
 
     service {
@@ -154,8 +115,9 @@ class socorro-base {
             enable => true,
             stop => '/usr/bin/service supervisor force-stop',
             hasstatus => true,
-            require => [Package['supervisor'], Service['postgresql'], Service['hadoop-hbase-thrift'],
-                        Exec['setup-schema'], Exec['hbase-schema']],
+            require => [Package['supervisor'], Service['postgresql'],
+                        Service['hadoop-hbase-thrift'], Exec['setup-schema'],
+                        Exec['hbase-schema']],
             ensure => running;
 
         rsyslog:
@@ -175,7 +137,7 @@ class socorro-python inherits socorro-base {
 	ensure => 'present',
 	uid => '10000',
 	shell => '/bin/bash',
-    groups => 'admin',
+        groups => 'admin',
 	managehome => true;
     }
 
@@ -200,14 +162,6 @@ class socorro-python inherits socorro-base {
     }
 
 # FIXME
-#	'/home/socorro/.pgpass':
-#	    require => User[socorro],
-#            owner => socorro,
-#            group => socorro,
-#            mode  => 600,
-#	    source => "puppet://$server/users/socorro/.pgpass";
-
-# FIXME
 #        '/etc/logrotate.d/socorro':
 #            ensure => present,
 #	    source => $fqdn ? {
@@ -215,34 +169,10 @@ class socorro-python inherits socorro-base {
 #		default => "puppet://$server/modules/socorro/prod/etc-logrotated/socorro",
 #		};
     package {
-        'python-psycopg2':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-	'python-simplejson':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-	'subversion':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-	'git-core':
-            require => Exec['apt-get-update'],
-            ensure => present;
-
-        'libpq-dev':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'python-virtualenv':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'python-dev':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
+        ['python-psycopg2', 'python-simplejson', 'subversion', 'git-core',
+         'libpq-dev', 'python-virtualenv', 'python-dev']:
+            ensure => latest,
+            require => Exec['apt-get-update'];
     }
 
     exec {
@@ -279,37 +209,12 @@ class socorro-python inherits socorro-base {
 
 class socorro-web inherits socorro-base {
 
-    file {
-        '/var/log/httpd':
-            owner => root,
-            group => root,
-            mode  => 755,
-            recurse=> true,
-            ensure => directory;
-
-# FIXME
-#        '/etc/httpd/conf.d/00-custom.conf':
-#            require => Package[apache2],
-#            owner => root,
-#            group => root,
-#            mode  => 644,
-#            ensure => present,
-#	    notify => Service[apache2],
-#	    source => "/vagrant/files/etc-httpd-confd/00-custom.conf";
-
-# FIXME 
-#        '/etc/sysconfig/httpd':
-#            require => Package[apache2],
-#            owner => root,
-#            group => root,
-#            mode  => 644,
-#            ensure => present,
-#	    notify => Service[apache2],
-#	    source => $fqdn ? {
-#		/sjc1.mozilla.com$/ => "puppet://$server/modules/socorro/stage/etc-sysconfig/httpd",
-#		default => "puppet://$server/modules/socorro/prod/etc-sysconfig/httpd",
-#		};
-#	
+    file { '/var/log/httpd':
+        owner => root,
+        group => root,
+        mode  => 755,
+        recurse=> true,
+        ensure => directory;
     }
 
     package {
@@ -317,13 +222,9 @@ class socorro-web inherits socorro-base {
             ensure => latest,
             require => [Exec['apt-get-update'], Exec['socorro-install']];
 
-        'libapache2-mod-php5':
-            require => Package[apache2],
-            ensure => 'present';
-
-        'libapache2-mod-wsgi':
-            require => Package[apache2],
-            ensure => 'present';
+        ['libapache2-mod-php5', 'libapache2-mod-wsgi']:
+            ensure => latest,
+            require => [Exec['apt-get-update'], Package[apache2]];
     }
 
     service {
@@ -435,115 +336,11 @@ class socorro-php inherits socorro-web {
     }
 
     package {
-        'memcached':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'libcrypt-ssleay-perl':
-            require => Exec['apt-get-update'],
-	    ensure => 'present';
-
-        'php5-pgsql':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-        'php5-curl':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-dev':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-tidy':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php-pear':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-common':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-cli':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-# FIXME
-#	'php-pdo':
-#            ensure => 'present';
-#
-#	'php-mbstring':
-#            ensure => 'present';
-
-	'php5-memcache':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-gd':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-mysql':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-	'php5-ldap':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
-
-# FIXME
-#	'php-xml':
-#            ensure => 'present';
-
-        'phpunit':
-            require => Exec['apt-get-update'],
-            ensure => 'present';
+        ['memcached', 'libcrypt-ssleay-perl', 'php5-pgsql', 'php5-curl',
+	 'php5-dev', 'php5-tidy', 'php-pear', 'php5-common', 'php5-cli',
+	 'php5-memcache', 'php5', 'php5-gd', 'php5-mysql', 'php5-ldap',
+         'phpunit']:
+            ensure => latest,
+            require => Exec['apt-get-update'];
     }
-}
-
-class socorro-admin inherits socorro-base {
-    
-
-# FIXME
-#    file {
-# FIXME
-#	"/root/bin/":
-#	    mode => 755,
-#	    owner => root,
-#	    group => root,
-#	    recurse => true,
-#	    ignore => [".svn"],
-#	    source => $fqdn ? {
-#		/sjc1.mozilla.com$/ => "puppet://$server/modules/socorro/stage/admin/scripts/",
-#		default => "puppet://$server/modules/socorro/prod/admin/scripts/",
-#		};
-
-# FIXME
-#	'/data/crash-data-tools/':
-#	    recurse => true,
-#	    ignore => [".svn"],
-#	    source => $fqdn ? {
-#		/sjc1.mozilla.com$/ => "puppet://$server/modules/socorro/stage/crash-data-tools/",
-#		default => "puppet://$server/modules/socorro/prod/crash-data-tools/",
-#		};
-
-# FIXME
-#	'/etc/cron.d/socorro':
-#	    owner => root,
-#	    group => root,
-#	    mode => 644,
-#	    source => $fqdn ? {
-#		/sjc1.mozilla.com$/ => "puppet://$server/modules/socorro/stage/etc-crond/socorro",
-#		default => "puppet://$server/modules/socorro/prod/etc-crond/socorro",
-#		};
-
-#   }
-
 }
