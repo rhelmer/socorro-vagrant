@@ -9,4 +9,8 @@ Vagrant::Config.run do |config|
     # enable this to see verbose and debug puppet output
     #puppet.options = "--verbose --debug"
   end
+  Vagrant::Config.run do |config|
+    config.vm.share_folder("socorro-code", "/home/socorro/dev/socorro", 
+                           "../", :nfs => true)
+  end
 end

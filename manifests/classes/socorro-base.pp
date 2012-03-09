@@ -169,20 +169,10 @@ class socorro-python inherits socorro-base {
 #		default => "puppet://$server/modules/socorro/prod/etc-logrotated/socorro",
 #		};
     package {
-        ['python-psycopg2', 'python-simplejson', 'subversion', 'git-core',
-         'libpq-dev', 'python-virtualenv', 'python-dev']:
+        ['python-psycopg2', 'python-simplejson', 'subversion', 'libpq-dev',
+         'python-virtualenv', 'python-dev']:
             ensure => latest,
             require => Exec['apt-get-update'];
-    }
-
-    exec {
-        '/usr/bin/git clone git://github.com/mozilla/socorro.git':
-            alias => 'socorro-clone',
-            cwd => '/home/socorro/dev',
-            creates => '/home/socorro/dev/socorro',
-            timeout => '3600',
-            user => 'socorro',
-            require => Package['git-core'],
     }
 
     exec {
@@ -191,7 +181,7 @@ class socorro-python inherits socorro-base {
             cwd => '/home/socorro/dev/socorro',
             creates => '/home/socorro/dev/socorro/stackwalk',
             timeout => '3600',
-            require => [Package['libcurl4-openssl-dev'], Exec['socorro-clone'], 
+            require => [Package['libcurl4-openssl-dev'],
                         File['/data/socorro'], Package['build-essential']],
             user => 'socorro';
     }
@@ -201,7 +191,7 @@ class socorro-python inherits socorro-base {
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/socorro',
             timeout => '3600',
-            require => [Exec['socorro-clone'], Package['ant'], File['/data/socorro'],
+            require => [Package['ant'], File['/data/socorro'],
                         Exec['minidump_stackwalk-install']],
             user => 'socorro';
     }
