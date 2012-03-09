@@ -123,6 +123,7 @@ class socorro-base {
             hasstatus => true,
             require => [Package['supervisor'], Service['postgresql'],
                         Exec['setup-schema'], Exec['hbase-schema']],
+            subscribe => Exec['socorro-install'],
             ensure => running;
 
         rsyslog:
@@ -228,6 +229,7 @@ class socorro-web inherits socorro-base {
             enable => true,
             ensure => running,
             hasstatus => true,
+            subscribe => Exec['socorro-install'],
             require => [Package[apache2], Exec[enable-mod-rewrite], 
                         Exec[enable-mod-headers], Exec[enable-mod-ssl],
                         Exec[enable-mod-php5],
