@@ -2,15 +2,21 @@
 # defines the base classes that all servers share
 #
 
+Exec { path => ["/data/jdk1.7.0_03/bin", "/bin", "/sbin", "/usr/bin",
+                "/usr/sbin", "/usr/local/bin", "/usr/local/sbin"],
+       environment => "JAVA_HOME=/data/jdk1.7.0_03/",
+       logoutput => on_failure
+}
+
 class socorro-base {
 
     file {
-        '/etc/profile':
-	    owner => root,
-	    group => root,
-	    mode => 644,
-	    ensure => present,
-	    source => "/vagrant/files/profile";
+        '/etc/profile.d/java.sh':
+            owner => root,
+            group => root,
+            mode => 644,
+            ensure => present,
+            source => "/vagrant/files/etc_profile.d/java.sh";
             
 	'/etc/hosts':
 	    owner => root,
@@ -56,7 +62,7 @@ class socorro-base {
 	 'hbase-configs':
             path => "/etc/hbase/conf/",
             recurse => true,
-            require => Package['hadoop-hbase-master'],
+            require => Exec['install-hbase'],
             source => "/vagrant/files/etc_hbase_conf";
 
 # FIXME break this out to separate classes
@@ -105,7 +111,7 @@ class socorro-base {
     package {
         ['rsyslog', 'libcurl4-openssl-dev', 'libxslt1-dev', 'build-essential',
          'supervisor', 'ant', 'python-software-properties', 'vim', 'emacs',
-         'python-pip', 'curl']:
+         'python-pip', 'curl', 'git-core']:
             ensure => latest,
             require => Exec['apt-get-update'];
     }
@@ -116,8 +122,7 @@ class socorro-base {
             stop => '/usr/bin/service supervisor force-stop',
             hasstatus => true,
             require => [Package['supervisor'], Service['postgresql'],
-                        Service['hadoop-hbase-thrift'], Exec['setup-schema'],
-                        Exec['hbase-schema']],
+                        Exec['setup-schema'], Exec['hbase-schema']],
             ensure => running;
 
         rsyslog:
@@ -193,6 +198,7 @@ class socorro-python inherits socorro-base {
             timeout => '3600',
             require => [Package['ant'], File['/data/socorro'],
                         Exec['minidump_stackwalk-install']],
+            logoutput => on_failure,
             user => 'socorro';
     }
 }

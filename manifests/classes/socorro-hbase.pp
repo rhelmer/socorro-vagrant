@@ -6,10 +6,11 @@ class socorro-hbase {
             require => Exec['add-cloudera-key'];
     }
 
-    package {
-        ['hadoop-hbase', 'hadoop-hbase-master', 'hadoop-hbase-thrift',
-         'liblzo2-dev']:
-            ensure => latest,
+    # wish we could use package for this, but we need JAVA_HOME set on first run
+    # see http://projects.puppetlabs.com/issues/6400
+    exec { '/usr/bin/apt-get install -y hadoop-hbase hadoop-hbase-master hadoop-hbase-thrift liblzo2-dev':
+            alias => 'install-hbase',
+            logoutput => on_failure,
             require => [Exec['apt-get-update'],Exec['apt-get-update-cloudera']];
     }
 
@@ -31,22 +32,7 @@ class socorro-hbase {
         '/bin/cat /home/socorro/dev/socorro/analysis/hbase_schema | sed \'s/LZO/NONE/g\' | /usr/bin/hbase shell':
             alias => 'hbase-schema',
             unless => '/bin/echo "describe \'crash_reports\'" | /usr/bin/hbase shell  | grep "1 row"',
-            require => Service['hadoop-hbase-master'];
+            logoutput => on_failure,
+            require => Exec['install-hbase'];
     }
-
-    service {
-        hadoop-hbase-thrift:
-            enable => true,
-            ensure => running,
-            hasstatus => true,
-            require => [Package['hadoop-hbase-thrift'], Service['hadoop-hbase-master']];
-
-        hadoop-hbase-master:
-            enable => true,
-            ensure => running,
-            hasstatus => true,
-            require => [Package['hadoop-hbase-master'], File['hbase-configs']];
-    }
-
 }
-
