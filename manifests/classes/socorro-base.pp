@@ -93,7 +93,7 @@ class socorro-base {
     exec {
         '/usr/bin/pip install isodate':
             require => Package['python-pip'],
-            logoutput => on_failure;
+            creates => '/usr/local/lib/python2.6/dist-packages/isodate';
     }
 
     exec {
@@ -104,14 +104,14 @@ class socorro-base {
     exec {
         '/usr/bin/curl http://download.oracle.com/otn-pub/java/jdk/7u3-b04/jdk-7u3-linux-x64.tar.gz | tar -C /data -zxf -':
             alias => 'install-oracle-jdk',
-            unless => '/usr/bin/file /data/jdk1.7.0_03/',
+            creates => '/data/jdk1.7.0_03/',
             require => Package['curl'];
     }   
 
     package {
         ['rsyslog', 'libcurl4-openssl-dev', 'libxslt1-dev', 'build-essential',
-         'supervisor', 'ant', 'python-software-properties', 'vim', 'emacs',
-         'python-pip', 'curl', 'git-core']:
+         'supervisor', 'ant', 'python-software-properties', 'python-pip',
+         'curl', 'git-core']:
             ensure => latest,
             require => Exec['apt-get-update'];
     }
@@ -198,8 +198,18 @@ class socorro-python inherits socorro-base {
             alias => 'socorro-install',
             cwd => '/home/socorro/dev/socorro',
             timeout => '3600',
+            creates => '/home/socorro/dev/socorro/analysis/build/lib/socorro-analysis-job.jar',
             require => [Package['ant'], File['/data/socorro'],
                         Exec['minidump_stackwalk-install']],
+            logoutput => on_failure,
+            user => 'socorro';
+    }
+
+    exec { '/usr/bin/make reinstall':
+            alias => 'socorro-reinstall',
+            cwd => '/home/socorro/dev/socorro',
+            timeout => '3600',
+            require => Exec['socorro-install'],
             logoutput => on_failure,
             user => 'socorro';
     }
@@ -296,35 +306,41 @@ class socorro-php inherits socorro-web {
         '/usr/sbin/a2ensite crash-stats':
             alias => 'enable-crash-stats-vhost',
             require => File['crash-stats-vhost'],
+            creates => '/etc/apache2/sites-enabled/crash-stats';
     }
 
     exec {
         '/usr/sbin/a2enmod rewrite':
             alias => 'enable-mod-rewrite',
             require => File['crash-stats-vhost'],
+            creates => '/etc/apache2/mods-enabled/rewrite.load';
     }
     exec {
         '/usr/sbin/a2enmod php5':
             alias => 'enable-mod-php5',
             require => File['crash-stats-vhost'],
+            creates => '/etc/apache2/mods-enabled/php5.load';
     }
 
     exec {
         '/usr/sbin/a2enmod proxy && /usr/sbin/a2enmod proxy_http':
             alias => 'enable-mod-proxy',
             require => File['crash-stats-vhost'],
+            creates => '/etc/apache2/mods-enabled/proxy_http.load';
     }
 
     exec {
         '/usr/sbin/a2enmod ssl':
             alias => 'enable-mod-ssl',
             require => File['crash-stats-vhost'],
+            creates => '/etc/apache2/mods-enabled/ssl.load';
     }
 
     exec {
         '/usr/sbin/a2enmod headers':
             alias => 'enable-mod-headers',
             require => File['crash-stats-vhost'],
+            creates => '/etc/apache2/mods-enabled/headers.load';
     }
 
     service {

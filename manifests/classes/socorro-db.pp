@@ -3,17 +3,17 @@ class socorro-db inherits socorro-base {
 	'postgresql-9.0':
             alias => 'postgresql',
 	    ensure => latest,
-            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']];
+            require => Exec['update-postgres-ppa'];
 
 	'postgresql-plperl-9.0':
             alias => 'postgresql-plperl',
             ensure => latest,
-            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']];
+            require => Exec['update-postgres-ppa'];
 
         'postgresql-contrib-9.0':
             alias => 'postgresql-contrib',
             ensure => latest,
-            require => [Exec['update-postgres-ppa'], Exec['apt-get-update']];
+            require => Exec['update-postgres-ppa'];
     }
 
     exec {
@@ -28,7 +28,9 @@ class socorro-db inherits socorro-base {
        'update-postgres-ppa':
             command => '/usr/bin/apt-get update',
             require => Exec['add-postgres-ppa'];
+    }
 
+    exec {
         '/usr/bin/sudo /usr/bin/add-apt-repository ppa:pitti/postgresql':
             alias => 'add-postgres-ppa',
             creates => '/etc/apt/sources.list.d/pitti-postgresql-lucid.list',
@@ -50,12 +52,14 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -c "grant all on database breakpad to breakpad_rw"':
             alias => 'grant-breakpad-access',
             user => 'postgres',
+            unless => '/usr/bin/psql breakpad -c "\z " | grep breakpad',
             require => Exec['create-breakpad-roles'];
     }
 
     exec {
         '/usr/bin/psql breakpad < /usr/share/postgresql/9.0/contrib/citext.sql':
             user => 'postgres',
+            unless => '/usr/bin/psql breakpad -c "\dT" | grep citext',
             require => [Exec['create-breakpad-db'], Package['postgresql-contrib']];
     }
 
@@ -113,12 +117,14 @@ class socorro-db inherits socorro-base {
         '/usr/bin/psql -c "grant all on database test to test"':
             alias => 'grant-test-access',
             user => 'postgres',
+            unless => '/usr/bin/psql breakpad -c "\z " | grep test',
             require => Exec['create-test-role'];
     }
 
     exec {
         '/usr/bin/psql test < /usr/share/postgresql/9.0/contrib/citext.sql':
             user => 'postgres',
+            unless => '/usr/bin/psql breakpad -c "\dT" | grep citext',
             require => [Exec['create-test-db'], Package['postgresql-contrib']];
     }
 

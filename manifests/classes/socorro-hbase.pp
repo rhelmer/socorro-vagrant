@@ -24,6 +24,7 @@ class socorro-hbase {
     exec {
         '/usr/bin/curl -s http://archive.cloudera.com/debian/archive.key | /usr/bin/sudo /usr/bin/apt-key add -':
             alias => 'add-cloudera-key',
+            unless => '/usr/bin/apt-key list | grep Cloudera',
             require => Package['curl'];
     }
 

@@ -40,6 +40,7 @@ class socorro-collector inherits socorro-web {
         '/usr/sbin/a2ensite crash-reports':
             alias => 'enable-crash-reports-vhost',
             require => File['crash-reports-vhost'],
+            creates => '/etc/apache2/sites-enabled/crash-reports';
     }
 
     include socorro-python

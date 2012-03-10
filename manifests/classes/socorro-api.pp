@@ -26,6 +26,7 @@ class socorro-api inherits socorro-web {
         '/usr/sbin/a2ensite socorro-api':
             alias => 'enable-socorro-api-vhost',
             require => File['socorro-api-vhost'],
+            creates => '/etc/apache2/sites-enabled/socorro-api';
     }
 
     include socorro-python
