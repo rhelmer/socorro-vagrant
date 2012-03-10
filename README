@@ -10,9 +10,7 @@ INSTALL
 
 2) Run vagrant (http://vagrantup.com/) :
 
- git clone git://github.com/rhelmer/socorro-vagrant.git
- cd socorro-vagrant
- gem install vagrant
+ Install vagrant from http://vagrantup.com/
 
  # NOTE: if you have a 32-bit host, change "lucid64" to "lucid32"
  vagrant box add socorro-all http://files.vagrantup.com/lucid64.box
@@ -37,21 +35,13 @@ The Socorro checkout is in:
 
 Socorro documentation (including developer docs) can be found at: http://socorro.readthedocs.org/
 
-To edit and install code (after doing "vagrant ssh"):
- sudo su - socorro
- cd ~/dev/socorro
- # vi, emacs or your favorite editor
- make install
-
 The Socorro files will be installed to /data/socorro/. You will need to restart
 the apache2 or supervisord services if you modify middleware or backend code.
 
-Alternatively, you may rerun puppet (which will run "make install" and automatically restart any
-services as-needed):
+By default, vagrant will share your socorro checkout in ../ with the VM 
+in /home/socorro/dev/socorro
 
- # as vagrant user
- sudo puppet /vagrant/manifests/init.pp
-
+You can do this from the host by running "vagrant provision".
 
 ---
 LOADING DATA
@@ -84,3 +74,6 @@ KNOWN ISSUES
 
 * HBase
 ** need to install LZO, remove sed hack
+* topcrash reports
+** the CSV dataload + backfill does not seem to work for this yet
+* cronjobs are not run in the vagrant environment
